@@ -1,5 +1,12 @@
-const createTaskTemplate = () => {
-  return `<article class="card card--black">
+const createTaskTemplate = ({
+  color = `black`,
+  description,
+  dueDate,
+  isArchive,
+  isFavorite,
+  repeatingsDays,
+}) => {
+  return `<article class="card card--${color}">
       <div class="card__form">
         <div class="card__inner">
           <div class="card__control">
@@ -22,15 +29,15 @@ const createTaskTemplate = () => {
             </svg>
           </div>
           <div class="card__textarea-wrap">
-            <p class="card__text">Example default task with default color.</p>
+            <p class="card__text">${description}</p>
           </div>
           <div class="card__settings">
             <div class="card__details">
               <div class="card__dates">
                 <div class="card__date-deadline">
                   <p class="card__input-deadline-wrap">
-                    <span class="card__date">23 September</span>
-                    <span class="card__time">11:15 PM</span>
+                    <span class="card__date">${dueDate}</span>
+                    <span class="card__time">${dueDate}</span>
                   </p>
                 </div>
               </div>
@@ -60,4 +67,4 @@ const createTaskTemplate = () => {
     </article>`;
 };
 
-export { createTaskTemplate };
+export {createTaskTemplate};
