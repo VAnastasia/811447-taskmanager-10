@@ -21,10 +21,10 @@ render(siteMainElement, createFilterTempalate(), `beforeend`);
 render(siteMainElement, createBoardTemplate(), `beforeend`);
 
 const taskListElement = document.querySelector(`.board__tasks`);
-render(taskListElement, createTaskEditTemplate(), `beforeend`);
+render(taskListElement, createTaskEditTemplate(tasks[0]), `beforeend`);
 
-tasks.forEach(() => {
-  render(taskListElement, createTaskTemplate(), `beforeend`);
+tasks.slice(1, 8).forEach((task) => {
+  render(taskListElement, createTaskTemplate(task), `beforeend`);
 });
 
 const boardElement = document.querySelector(`.board`);

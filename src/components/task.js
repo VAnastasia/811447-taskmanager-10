@@ -1,3 +1,7 @@
+/* eslint-disable no-unused-expressions */
+import {formatDate} from "../utils";
+import {formatTime} from "../utils";
+
 const createTaskTemplate = ({
   color = `black`,
   description,
@@ -5,20 +9,21 @@ const createTaskTemplate = ({
   isArchive,
   isFavorite,
   repeatingsDays,
+  tags
 }) => {
-  return `<article class="card card--${color}">
+  return `<article class="card card--${color} ${repeatingsDays. length > 0 && Object.values(repeatingsDays).some((day) => day) ? `card--repeat` : ``}">
       <div class="card__form">
         <div class="card__inner">
           <div class="card__control">
             <button type="button" class="card__btn card__btn--edit">
               edit
             </button>
-            <button type="button" class="card__btn card__btn--archive">
+            <button type="button" class="card__btn ${isArchive ? `card__btn--archive` : ``}">
               archive
             </button>
             <button
               type="button"
-              class="card__btn card__btn--favorites card__btn--disabled"
+              class="card__btn ${isFavorite ? `card__btn--favorites` : ``} card__btn--disabled"
             >
               favorites
             </button>
@@ -36,28 +41,20 @@ const createTaskTemplate = ({
               <div class="card__dates">
                 <div class="card__date-deadline">
                   <p class="card__input-deadline-wrap">
-                    <span class="card__date">${dueDate}</span>
-                    <span class="card__time">${dueDate}</span>
+                    <span class="card__date">${formatDate(dueDate)}</span>
+                    <span class="card__time">${formatTime(dueDate)}</span>
                   </p>
                 </div>
               </div>
               <div class="card__hashtag">
                 <div class="card__hashtag-list">
-                  <span class="card__hashtag-inner">
-                    <span class="card__hashtag-name">
-                      #todo
-                    </span>
-                  </span>
-                  <span class="card__hashtag-inner">
-                    <span class="card__hashtag-name">
-                      #personal
-                    </span>
-                  </span>
-                  <span class="card__hashtag-inner">
-                    <span class="card__hashtag-name">
-                      #important
-                    </span>
-                  </span>
+                ${(Array.from(tags).map((tag) => (
+                  `<span class="card__hashtag-inner">
+                      <input type="hidden" name="hashtag" value="${tag}" class="card__hashtag-hidden-input" />
+                      <button type="button" class="card__hashtag-name">#${tag}</button>
+                      <button type="button" class="card__hashtag-delete">delete</button>
+                    </span>`.trim()
+                ))).join(``)}
                 </div>
               </div>
             </div>
