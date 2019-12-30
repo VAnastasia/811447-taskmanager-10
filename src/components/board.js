@@ -9,4 +9,4 @@ const createBoardTemplate = () => {
     </section>`;
 };
 
-export { createBoardTemplate };
+export {createBoardTemplate};

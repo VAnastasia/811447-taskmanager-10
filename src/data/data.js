@@ -59,4 +59,21 @@ const getTask = () => ({
 const getTasks = (count) =>
   new Array(count).fill(null).map(getTask);
 
+const filterNames = [
+  `all`, `overdue`, `today`, `favorites`, `repeatings`, `tags`, `archive`
+];
+
+const generateFilters = () => {
+  return filterNames.map((it) => {
+    return {
+      name: it,
+      count: Math.floor(Math.random() * 10)
+    };
+  });
+};
+
+const filters = generateFilters();
+
 export const tasks = getTasks(TASKS_AMOUNT);
+
+export {filters};

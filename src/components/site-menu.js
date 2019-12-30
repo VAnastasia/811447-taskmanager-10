@@ -29,4 +29,4 @@ const createSiteMenuTemplate = () => {
         </section>`;
 };
 
-export { createSiteMenuTemplate };
+export {createSiteMenuTemplate};
