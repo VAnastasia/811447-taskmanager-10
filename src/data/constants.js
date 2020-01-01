@@ -2,7 +2,7 @@ export const DESCRIPTIONS = [`Изучить теорию`, `Сделать до
 export const TAGS = [`homework`, `theory`, `practice`, `intensive`, `keks`];
 export const TIME_WEEK = 7 * 24 * 60 * 60 * 1000;
 export const TIME_DAY = 24 * 60 * 60 * 1000;
-export const TASKS_AMOUNT = 22;
+export const TASKS_AMOUNT = 0;
 
 export const TaskDay = {
   MO: `mo`,
