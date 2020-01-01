@@ -1,5 +1,4 @@
-import {formatDate} from "../utils";
-import {formatTime} from "../utils";
+import {formatDate, formatTime, createElement} from "../utils";
 import {TaskColor} from "../data/constants";
 
 
@@ -132,4 +131,25 @@ const createTaskEditTemplate = (
     </article>`;
 };
 
-export {createTaskEditTemplate};
+export default class TaskEditComponent {
+  constructor(task) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTaskEditTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

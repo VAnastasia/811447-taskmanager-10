@@ -1,6 +1,4 @@
-/* eslint-disable no-unused-expressions */
-import {formatDate} from "../utils";
-import {formatTime} from "../utils";
+import {formatTime, formatDate, createElement} from "../utils";
 
 const createTaskTemplate = ({
   color = `black`,
@@ -64,4 +62,26 @@ const createTaskTemplate = ({
     </article>`;
 };
 
-export {createTaskTemplate};
+export default class TaskComponent {
+  constructor(task) {
+    this._task = task;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTaskTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
