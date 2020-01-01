@@ -1,18 +1,17 @@
-import {formatDate} from "../utils";
-import {formatTime} from "../utils";
+import {formatDate, formatTime, createElement} from "../utils";
 import {TaskColor} from "../data/constants";
 
 
 const createTaskEditTemplate = (
-  {
-    color = `black`,
-    description,
-    dueDate,
-    isArchive,
-    isFavorite,
-    repeatingsDays,
-    tags
-  }
+    {
+      color = `black`,
+      description,
+      dueDate,
+      // isArchive,
+      // isFavorite,
+      repeatingsDays,
+      tags
+    }
 ) => {
   return `<article class="card card--edit card--${color} card--repeat">
       <form class="card__form" method="get">
@@ -54,18 +53,18 @@ const createTaskEditTemplate = (
                 <fieldset class="card__repeat-days">
                   <div class="card__repeat-days-inner">
                   ${(Object.keys(repeatingsDays).map((day) => (
-                    `<input
-                    class="visually-hidden card__repeat-day-input"
-                    type="checkbox"
-                    id="repeat-${day}-4"
-                    name="repeat"
-                    value="${day}"
-                    ${repeatingsDays[day] ? `checked` : ``}
-                  />
-                  <label class="card__repeat-day" for="repeat-${day}-4"
-                    >${day}</label
-                  >`.trim()
-                  ))).join(``)}
+    `<input
+        class="visually-hidden card__repeat-day-input"
+        type="checkbox"
+        id="repeat-${day}-4"
+        name="repeat"
+        value="${day}"
+        ${repeatingsDays[day] ? `checked` : ``}
+      />
+      <label class="card__repeat-day" for="repeat-${day}-4"
+        >${day}</label
+      >`.trim()
+  ))).join(``)}
 
                   </div>
                 </fieldset>
@@ -74,21 +73,21 @@ const createTaskEditTemplate = (
                 <div class="card__hashtag-list">
 
                 ${(Array.from(tags).map((tag) => (
-                  `<span class="card__hashtag-inner">
-                  <input
-                    type="hidden"
-                    name="hashtag"
-                    value="${tag}"
-                    class="card__hashtag-hidden-input"
-                  />
-                  <p class="card__hashtag-name">
-                    #${tag}
-                  </p>
-                  <button type="button" class="card__hashtag-delete">
-                    delete
-                  </button>
-                </span>`.trim()
-                ))).join(``)}
+    `<span class="card__hashtag-inner">
+    <input
+      type="hidden"
+      name="hashtag"
+      value="${tag}"
+      class="card__hashtag-hidden-input"
+    />
+    <p class="card__hashtag-name">
+      #${tag}
+    </p>
+    <button type="button" class="card__hashtag-delete">
+      delete
+    </button>
+  </span>`.trim()
+  ))).join(``)}
 
                 </div>
                 <label>
@@ -105,20 +104,20 @@ const createTaskEditTemplate = (
               <h3 class="card__colors-title">Color</h3>
               <div class="card__colors-wrap">
               ${(Object.keys(TaskColor).map((colorItem) => (
-                `<input
-                type="radio"
-                id="color-${colorItem.toLowerCase()}-4"
-                class="card__color-input card__color-input--${colorItem.toLowerCase()} visually-hidden"
-                name="color"
-                value="${colorItem.toLowerCase()}"
-                ${TaskColor[colorItem] === color ? `checked` : ``}
-              />
-              <label
-                for="color-${colorItem.toLowerCase()}-4"
-                class="card__color card__color--${colorItem.toLowerCase()}"
-                >${colorItem.toLowerCase()}</label
-              >`.trim()
-              ))).join(``)}
+    `<input
+      type="radio"
+      id="color-${colorItem.toLowerCase()}-4"
+      class="card__color-input card__color-input--${colorItem.toLowerCase()} visually-hidden"
+      name="color"
+      value="${colorItem.toLowerCase()}"
+      ${TaskColor[colorItem] === color ? `checked` : ``}
+      />
+      <label
+      for="color-${colorItem.toLowerCase()}-4"
+      class="card__color card__color--${colorItem.toLowerCase()}"
+      >${colorItem.toLowerCase()}</label
+      >`.trim()
+  ))).join(``)}
 
               </div>
             </div>
@@ -132,4 +131,25 @@ const createTaskEditTemplate = (
     </article>`;
 };
 
-export { createTaskEditTemplate };
+export default class TaskEditComponent {
+  constructor(task) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTaskEditTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

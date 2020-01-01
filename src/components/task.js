@@ -1,6 +1,4 @@
-/* eslint-disable no-unused-expressions */
-import {formatDate} from "../utils";
-import {formatTime} from "../utils";
+import {formatTime, formatDate, createElement} from "../utils";
 
 const createTaskTemplate = ({
   color = `black`,
@@ -49,12 +47,12 @@ const createTaskTemplate = ({
               <div class="card__hashtag">
                 <div class="card__hashtag-list">
                 ${(Array.from(tags).map((tag) => (
-                  `<span class="card__hashtag-inner">
-                      <input type="hidden" name="hashtag" value="${tag}" class="card__hashtag-hidden-input" />
-                      <button type="button" class="card__hashtag-name">#${tag}</button>
-                      <button type="button" class="card__hashtag-delete">delete</button>
-                    </span>`.trim()
-                ))).join(``)}
+    `<span class="card__hashtag-inner">
+      <input type="hidden" name="hashtag" value="${tag}" class="card__hashtag-hidden-input" />
+      <button type="button" class="card__hashtag-name">#${tag}</button>
+      <button type="button" class="card__hashtag-delete">delete</button>
+    </span>`.trim()
+  ))).join(``)}
                 </div>
               </div>
             </div>
@@ -64,4 +62,26 @@ const createTaskTemplate = ({
     </article>`;
 };
 
-export {createTaskTemplate};
+export default class TaskComponent {
+  constructor(task) {
+    this._task = task;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTaskTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
