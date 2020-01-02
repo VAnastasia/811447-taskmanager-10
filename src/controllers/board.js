@@ -1,16 +1,12 @@
 const SHOWING_TASKS_COUNT_ON_START = 8;
 const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
 
-import SiteMenuComponent from "../components/site-menu";
-import FilterComponent from "../components/filter";
-import BoardComponent from "../components/board";
 import SortComponent from "../components/sort";
 import TaskComponent from "../components/task";
 import NoTasksComponent from "../components/no-tasks";
 import TasksComponent from "../components/tasks";
 import TaskEditComponent from "../components/task-edit";
 import LoadMoreComponent from "../components/load-more";
-import {filters} from "../data/data";
 import {render, RenderPosition} from "../utils";
 
 const renderTask = (task) => {
