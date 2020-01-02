@@ -5,7 +5,6 @@ import FilterComponent from "./components/filter";
 import {render, RenderPosition} from "./utils";
 import {tasksAll, filters} from "./data/data";
 
-
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 

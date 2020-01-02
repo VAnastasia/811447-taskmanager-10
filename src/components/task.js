@@ -10,7 +10,7 @@ const createTaskTemplate = ({
   repeatingsDays,
   tags
 }) => {
-  return `<article class="card card--${color} ${repeatingsDays. length > 0 && Object.values(repeatingsDays).some((day) => day) ? `card--repeat` : ``}">
+  return `<article class="card card--${color} ${Object.keys(repeatingsDays).some((day) => repeatingsDays[day]) ? `card--repeat` : ``}">
       <div class="card__form">
         <div class="card__inner">
           <div class="card__control">
