@@ -75,5 +75,6 @@ const generateFilters = () => {
 const filters = generateFilters();
 
 export const tasks = getTasks(TASKS_AMOUNT);
+export const tasksAll = tasks.slice();
 
 export {filters};

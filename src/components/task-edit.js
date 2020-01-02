@@ -1,6 +1,6 @@
-import {formatDate, formatTime, createElement} from "../utils";
+import AbstractComponent from "./abstract-component";
+import {formatDate, formatTime} from "../utils";
 import {TaskColor} from "../data/constants";
-
 
 const createTaskEditTemplate = (
     {
@@ -131,25 +131,18 @@ const createTaskEditTemplate = (
     </article>`;
 };
 
-export default class TaskEditComponent {
+export default class TaskEditComponent extends AbstractComponent {
   constructor(task) {
+    super();
     this._task = task;
-    this._element = null;
   }
 
   getTemplate() {
     return createTaskEditTemplate(this._task);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setSubmitHandler(handler) {
+    this.getElement().querySelector(`form`)
+      .addEventListener(`submit`, handler);
   }
 }

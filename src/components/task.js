@@ -1,4 +1,5 @@
-import {formatTime, formatDate, createElement} from "../utils";
+import {formatTime, formatDate} from "../utils";
+import AbstractComponent from "./abstract-component";
 
 const createTaskTemplate = ({
   color = `black`,
@@ -62,26 +63,18 @@ const createTaskTemplate = ({
     </article>`;
 };
 
-export default class TaskComponent {
+export default class TaskComponent extends AbstractComponent {
   constructor(task) {
+    super();
     this._task = task;
-
-    this._element = null;
   }
 
   getTemplate() {
     return createTaskTemplate(this._task);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setEditButtonClickHandler(handler) {
+    this.getElement().querySelector(`.card__btn--edit`)
+     .addEventListener(`click`, handler);
   }
 }
