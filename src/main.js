@@ -44,6 +44,8 @@ const renderTask = (task) => {
   const editForm = taskEditComponent.getElement().querySelector(`form`);
   editForm.addEventListener(`submit`, replaceEditToTask);
 
+  const taskListElement = document.querySelector(`.board__tasks`);
+
   render(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
 };
 
@@ -52,21 +54,21 @@ const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
 render(siteHeaderElement, new SiteMenuComponent().getElement(), RenderPosition.BEFOREEND);
 
-render(siteMainElement, new BoardComponent().getElement(), RenderPosition.BEFOREEND);
-
-const board = document.querySelector(`.board.container`);
-
-
-const taskListElement = document.querySelector(`.board__tasks`);
 
 let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
 
 if (tasks.length > 0) {
   render(siteMainElement, new FilterComponent(filters).getElement(), RenderPosition.BEFOREEND);
+  render(siteMainElement, new BoardComponent().getElement(), RenderPosition.BEFOREEND);
+  const board = document.querySelector(`.board.container`);
   render(board, new SortComponent().getElement(), RenderPosition.BEFOREEND);
   render(board, new TasksComponent().getElement(), RenderPosition.BEFOREEND);
+
   tasks.slice(0, showingTasksCount).forEach(renderTask);
 } else {
+  render(siteMainElement, new BoardComponent().getElement(), RenderPosition.BEFOREEND);
+  const board = document.querySelector(`.board.container`);
+  console.log(board);
   render(board, new NoTasksComponent().getElement(), RenderPosition.BEFOREEND);
 }
 
