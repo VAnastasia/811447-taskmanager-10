@@ -27,8 +27,7 @@ const getRandonNumber = (min, max) =>
 const getRandomItem = (array) =>
   array[Math.floor(Math.random() * array.length)];
 
-const getRandomDate = () =>
-  Date.now() - getRandonNumber(0, TIME_WEEK);
+const getRandomDate = () => Math.random() > 0.5 ? Date.now() - getRandonNumber(0, TIME_WEEK) : Date.now() + getRandonNumber(0, TIME_WEEK);
 
 const getRandomBoolean = (chance = 0.5) =>
   Math.random() > chance;
