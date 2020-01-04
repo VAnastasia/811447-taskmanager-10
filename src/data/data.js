@@ -59,22 +59,52 @@ const getTask = () => ({
 const getTasks = (count) =>
   new Array(count).fill(null).map(getTask);
 
-const filterNames = [
-  `all`, `overdue`, `today`, `favorites`, `repeatings`, `tags`, `archive`
-];
+// const filterNames = [
+//   `all`, `overdue`, `today`, `favorites`, `repeatings`, `tags`, `archive`
+// ];
 
-const generateFilters = () => {
-  return filterNames.map((it) => {
-    return {
-      name: it,
-      count: Math.floor(Math.random() * 10)
-    };
-  });
-};
+// const generateFilters = () => {
+//   return filterNames.map((it) => {
+//     return {
+//       name: it,
+//       count: 0
+//     };
+//   });
+// };
 
-const filters = generateFilters();
 
 export const tasks = getTasks(TASKS_AMOUNT);
 export const tasksAll = tasks.slice();
+
+const filters = [
+  {
+    name: `all`,
+    count: tasks.length
+  },
+  {
+    name: `overdue`,
+    count: tasks.filter((task) => task.dueDate < new Date(Date.now())).length
+  },
+  {
+    name: `today`,
+    count: tasks.filter((task) => (new Date(task.dueDate)).getDate() === (new Date(Date.now())).getDate()).length
+  },
+  {
+    name: `favorites`,
+    count: tasks.filter((task) => task.isFavorite).length
+  },
+  {
+    name: `repeatings`,
+    count: tasks.filter((task) => Object.values(task.repeatingsDays).some((it) => !!it)).length
+  },
+  {
+    name: `tags`,
+    count: tasks.filter((task) => task.tags.length > 0).length
+  },
+  {
+    name: `archive`,
+    count: tasks.filter((task) => task.isArchive).length
+  },
+];
 
 export {filters};
