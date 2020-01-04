@@ -13,7 +13,7 @@ const createTaskEditTemplate = (
       tags
     }
 ) => {
-  return `<article class="card card--edit card--${color} card--repeat">
+  return `<article class="card card--edit card--${color} ${Object.keys(repeatingsDays).some((day) => repeatingsDays[day]) ? `card--repeat` : ``} ${dueDate < new Date(Date.now()) ? `card--deadline` : ``}">
       <form class="card__form" method="get">
         <div class="card__inner">
           <div class="card__color-bar">

@@ -27,7 +27,7 @@ const getRandonNumber = (min, max) =>
 const getRandomItem = (array) =>
   array[Math.floor(Math.random() * array.length)];
 
-const getRandomDate = () => Math.random() > 0.5 ? Date.now() - getRandonNumber(0, TIME_WEEK) : Date.now() + getRandonNumber(0, TIME_WEEK);
+const getRandomDate = () => getRandomBoolean() ? Date.now() - getRandonNumber(0, TIME_WEEK) : Date.now() + getRandonNumber(0, TIME_WEEK);
 
 const getRandomBoolean = (chance = 0.5) =>
   Math.random() > chance;
@@ -47,8 +47,8 @@ const getRandomTags = ([...tags], num = getRandonNumber(0, 3)) =>
 
 const getTask = () => ({
   description: getRandomItem(DESCRIPTIONS),
-  dueDate: getRandomDate(),
-  repeatingsDays: getRepeatingDays(),
+  dueDate: getRandomBoolean() ? getRandomDate() : 0,
+  repeatingsDays: getRandomBoolean() ? getRepeatingDays() : {},
   tags: getRandomTags(TAGS),
   color: getRandomItem(colors),
   isFavorite: getRandomBoolean(),
