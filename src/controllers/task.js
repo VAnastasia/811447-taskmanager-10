@@ -29,18 +29,30 @@ export default class TaskController {
   }
 
   _replaceEditToTask() {
+    this._taskEditComponent.reset();
+
     this._container.replaceChild(this._taskComponent.getElement(), this._taskEditComponent.getElement());
+
+    this._mode = Mode.DEFAULT;
   }
 
   _replaceTaskToEdit() {
+    this._onViewChange();
+
     this._container.replaceChild(this._taskEditComponent.getElement(), this._taskComponent.getElement());
+
+    this._mode = Mode.EDIT;
+  }
+
+  setDefaultView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._replaceEditToTask();
+    }
   }
 
   render(task) {
-    const container = this._container;
-
-    // const oldTaskComponent = this._taskComponent;
-    // const oldTaskEditComponent = this._taskEditComponent;
+    const oldTaskComponent = this._taskComponent;
+    const oldTaskEditComponent = this._taskEditComponent;
 
     this._taskComponent = new TaskComponent(task);
     this._taskEditComponent = new TaskEditComponent(task);
@@ -50,8 +62,28 @@ export default class TaskController {
       document.addEventListener(`keydown`, this._onEscKeyDown);
     });
 
-    this._taskEditComponent.setSubmitHandler(this._replaceEditToTask);
+    this._taskComponent.setArchiveButtonClickHandler(() => {
+      this._onDataChange(this, task, Object.assign({}, task, {
+        isArchive: !task.isArchive
+      }));
+    });
 
-    render(container, this._taskComponent.getElement(), RenderPosition.BEFOREEND);
+    this._taskComponent.setFavoritesButtonClickHandler(() => {
+      this._onDataChange(this, task, Object.assign({}, task, {
+        isFavorite: !task.isFavorite,
+      }));
+    });
+
+    this._taskEditComponent.setSubmitHandler((evt) => {
+      evt.preventDefault();
+      this._replaceEditToTask();
+    });
+
+    if (oldTaskEditComponent && oldTaskComponent) {
+      this._container.replaceChild(this._taskComponent.getElement(), oldTaskComponent.getElement());
+      // this._container.replaceChild(this._taskEditComponent.getElement(), oldTaskEditComponent.getElement());
+    } else {
+      render(this._container, this._taskComponent.getElement(), RenderPosition.BEFOREEND);
+    }
   }
 }
