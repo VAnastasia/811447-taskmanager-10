@@ -2,46 +2,18 @@ const SHOWING_TASKS_COUNT_ON_START = 8;
 const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
 
 import SortComponent, {SortType} from "../components/sort";
-import TaskComponent from "../components/task";
 import NoTasksComponent from "../components/no-tasks";
 import TasksComponent from "../components/tasks";
-import TaskEditComponent from "../components/task-edit";
 import LoadMoreComponent from "../components/load-more";
 import {render, RenderPosition} from "../utils";
+import TaskController from "./task";
 
-const renderTask = (task) => {
-  const taskComponent = new TaskComponent(task);
-  const taskEditComponent = new TaskEditComponent(task);
-
-  const replaceEditToTask = () => {
-    taskListElement.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
-  };
-
-  const replaceTaskToEdit = () => {
-    taskListElement.replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
-  };
-
-  const onEscKeyDown = (evt) => {
-    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-
-    if (isEscKey) {
-      replaceEditToTask();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    }
-  };
-
-  taskComponent.setEditButtonClickHandler(() => {
-    replaceTaskToEdit();
-    document.addEventListener(`keydown`, onEscKeyDown);
+const renderTasks = (taskListElement, tasks) => {
+  return tasks.map((task) => {
+    const taskController = new TaskController(taskListElement);
+    taskController.render(task);
   });
-
-  taskEditComponent.setSubmitHandler(replaceEditToTask);
-
-  const taskListElement = document.querySelector(`.board__tasks`);
-
-  render(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
 };
-
 
 export default class BoardController {
   constructor(container) {
@@ -60,6 +32,7 @@ export default class BoardController {
     if (tasks.length > 0) {
       render(container, this._sortComponent.getElement(), RenderPosition.BEFOREEND);
       render(container, this._tasksComponent.getElement(), RenderPosition.BEFOREEND);
+      const taskListElement = document.querySelector(`.board__tasks`);
 
       let sortedTasks = tasks.slice();
       this._sortComponent.setSortTypeChangeHandler((sortType) => {
@@ -75,10 +48,10 @@ export default class BoardController {
             break;
         }
         document.querySelector(`.board__tasks`).innerHTML = null;
-        sortedTasks.slice(0, showingTasksCount).forEach(renderTask);
+        renderTasks(taskListElement, sortedTasks.slice(0, showingTasksCount));
       });
 
-      sortedTasks.slice(0, showingTasksCount).forEach(renderTask);
+      renderTasks(taskListElement, sortedTasks.slice(0, showingTasksCount));
     } else {
       render(container, this._noTasksComponent.getElement(), RenderPosition.BEFOREEND);
     }
@@ -93,9 +66,9 @@ export default class BoardController {
     this._loadMoreComponent.setClickHandler(() => {
       const prevTasksCount = showingTasksCount;
       showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
+      const taskListElement = document.querySelector(`.board__tasks`);
 
-      tasks.slice(prevTasksCount, showingTasksCount)
-        .forEach(renderTask);
+      renderTasks(taskListElement, tasks.slice(prevTasksCount, showingTasksCount));
 
       if (showingTasksCount >= tasks.length) {
         this._loadMoreComponent.getElement().remove();
