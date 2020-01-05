@@ -1,6 +1,9 @@
 import AbstractSmartComponent from './abstract-smart-component.js';
 import {formatDate, formatTime} from "../utils";
 import {TaskColor} from "../data/constants";
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+import 'flatpickr/dist/themes/light.css';
 
 const createTaskEditTemplate = (task, options) => {
   const {description, color, tags, dueDate, repeatingsDays} = task;
@@ -149,6 +152,7 @@ export default class TaskEditComponent extends AbstractSmartComponent {
 
     this._subscribeOnEvents();
     this._submitHandler = null;
+    this._flatpickr = null;
   }
 
   getTemplate() {
@@ -166,7 +170,7 @@ export default class TaskEditComponent extends AbstractSmartComponent {
   rerender() {
     super.rerender();
 
-    // this._applyFlatpickr();
+    this._applyFlatpickr();
   }
 
   reset() {
@@ -184,6 +188,22 @@ export default class TaskEditComponent extends AbstractSmartComponent {
       .addEventListener(`submit`, handler);
 
     this._submitHandler = handler;
+  }
+
+  _applyFlatpickr() {
+    if (this._flatpickr) {
+      this._flatpickr.destroy();
+      this._flatpickr = null;
+    }
+
+    if (this._isDateShowing) {
+      const dateElement = this.getElement().querySelector(`.card__date`);
+      this._flatpickr = flatpickr(dateElement, {
+        altInput: true,
+        allowInput: true,
+        defaultDate: this._task.dueDate,
+      });
+    }
   }
 
   _subscribeOnEvents() {
