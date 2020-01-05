@@ -45,10 +45,20 @@ const getRepeatingDays = () =>
 const getRandomTags = ([...tags], num = getRandonNumber(0, 3)) =>
   shuffleArray(tags).slice(0, num);
 
+const noRepetingsDays = {
+  mo: false,
+  tu: false,
+  we: false,
+  th: false,
+  fr: false,
+  sa: false,
+  su: false,
+};
+
 const getTask = () => ({
   description: getRandomItem(DESCRIPTIONS),
-  dueDate: getRandomBoolean() ? getRandomDate() : 0,
-  repeatingsDays: getRandomBoolean() ? getRepeatingDays() : {},
+  dueDate: getRandomBoolean() ? getRandomDate() : null,
+  repeatingsDays: getRandomBoolean() ? getRepeatingDays() : noRepetingsDays,
   tags: getRandomTags(TAGS),
   color: getRandomItem(colors),
   isFavorite: getRandomBoolean(),

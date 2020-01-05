@@ -1,6 +1,6 @@
 import TaskComponent from "../components/task";
 import TaskEditComponent from "../components/task-edit";
-import {render, RenderPosition} from "../utils";
+import {render, replace, remove, RenderPosition} from "../utils";
 
 const Mode = {
   DEFAULT: `default`,
@@ -29,6 +29,7 @@ export default class TaskController {
   }
 
   _replaceEditToTask() {
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
     this._taskEditComponent.reset();
 
     this._container.replaceChild(this._taskComponent.getElement(), this._taskEditComponent.getElement());
@@ -50,9 +51,10 @@ export default class TaskController {
     }
   }
 
-  render(task) {
+  render(task, mode = Mode.DEFAULT) {
     const oldTaskComponent = this._taskComponent;
     const oldTaskEditComponent = this._taskEditComponent;
+    this._mode = mode;
 
     this._taskComponent = new TaskComponent(task);
     this._taskEditComponent = new TaskEditComponent(task);
@@ -79,11 +81,33 @@ export default class TaskController {
       this._replaceEditToTask();
     });
 
-    if (oldTaskEditComponent && oldTaskComponent) {
-      this._container.replaceChild(this._taskComponent.getElement(), oldTaskComponent.getElement());
-      // this._container.replaceChild(this._taskEditComponent.getElement(), oldTaskEditComponent.getElement());
-    } else {
-      render(this._container, this._taskComponent.getElement(), RenderPosition.BEFOREEND);
+    // if (oldTaskComponent) {
+    //   this._container.replaceChild(this._taskComponent.getElement(), oldTaskComponent.getElement());
+    //   this._container.replaceChild(this._taskEditComponent.getElement(), oldTaskEditComponent.getElement());
+    // } else if (oldTaskEditComponent) {
+    //   this._container.replaceChild(this._taskEditComponent.getElement(), oldTaskEditComponent.getElement());
+    // } else {
+    //   render(this._container, this._taskComponent.getElement(), RenderPosition.BEFOREEND);
+    // }
+
+    switch (mode) {
+      case Mode.DEFAULT:
+        if (oldTaskEditComponent && oldTaskComponent) {
+          replace(this._taskComponent, oldTaskComponent);
+          replace(this._taskEditComponent, oldTaskEditComponent);
+          // this._replaceEditToTask();
+        } else {
+          render(this._container, this._taskComponent.getElement(), RenderPosition.BEFOREEND);
+        }
+        break;
+      case Mode.EDIT:
+        if (oldTaskEditComponent && oldTaskComponent) {
+          remove(oldTaskComponent);
+          remove(oldTaskEditComponent);
+        }
+        document.addEventListener(`keydown`, this._onEscKeyDown);
+        render(this._container, this._taskEditComponent.getElement(), RenderPosition.AFTERBEGIN);
+        break;
     }
   }
 }

@@ -12,6 +12,8 @@ const renderTasks = (taskListElement, tasks, onDataChange, onViewChange) => {
   return tasks.map((task) => {
     const taskController = new TaskController(taskListElement, onDataChange, onViewChange);
     taskController.render(task);
+
+    return taskController;
   });
 };
 
@@ -48,7 +50,7 @@ export default class BoardController {
   }
 
   _onViewChange() {
-    // this._showedTaskControllers.forEach((it) => it.setDefaultView());
+    this._showedTaskControllers.forEach((it) => it.setDefaultView());
   }
 
   _onSortTypeChange(sortType) {

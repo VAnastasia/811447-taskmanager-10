@@ -40,8 +40,8 @@ const createTaskTemplate = ({
               <div class="card__dates">
                 <div class="card__date-deadline">
                   <p class="card__input-deadline-wrap">
-                    <span class="card__date">${formatDate(dueDate)}</span>
-                    <span class="card__time">${formatTime(dueDate)}</span>
+                    <span class="card__date">${dueDate ? formatDate(dueDate) : ``}</span>
+                    <span class="card__time">${dueDate ? formatTime(dueDate) : ``}</span>
                   </p>
                 </div>
               </div>
