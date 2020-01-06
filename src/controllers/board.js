@@ -54,7 +54,7 @@ export default class BoardController {
   }
 
   _onSortTypeChange(sortType) {
-    let sortedTasks = this._tasks.slice();
+    let sortedTasks = [];
     switch (sortType) {
       case SortType.DATE_UP:
         sortedTasks = this._tasks.slice().sort((a, b) => a.dueDate - b.dueDate);
@@ -70,7 +70,7 @@ export default class BoardController {
     const taskListElement = this._tasksComponent.getElement();
     taskListElement.innerHTML = ``;
 
-    const newTasks = renderTasks(taskListElement, sortedTasks, this._onDataChange, this._onViewChange);
+    const newTasks = renderTasks(taskListElement, sortedTasks.slice(0, this._showingTasksCount), this._onDataChange, this._onViewChange);
     this._showedTaskControllers = newTasks;
   }
 
@@ -90,9 +90,7 @@ export default class BoardController {
       const newTasks = renderTasks(taskListElement, this._tasks.slice(0, this._showingTasksCount), this._onDataChange, this._onViewChange);
       this._showedTaskControllers = this._showedTaskControllers.concat(newTasks);
 
-      // this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
-
-      // renderTasks(taskListElement, this._tasks.slice(0, showingTasksCount), this._onDataChange, this._onViewChange);
+      this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     } else {
       render(container, this._noTasksComponent.getElement(), RenderPosition.BEFOREEND);
     }

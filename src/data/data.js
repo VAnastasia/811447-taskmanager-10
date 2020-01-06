@@ -92,7 +92,7 @@ const filters = [
   },
   {
     name: `overdue`,
-    count: tasks.filter((task) => task.dueDate < new Date(Date.now())).length
+    count: tasks.filter((task) => task.dueDate && task.dueDate < new Date(Date.now())).length
   },
   {
     name: `today`,
