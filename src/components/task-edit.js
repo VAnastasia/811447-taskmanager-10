@@ -5,11 +5,12 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import 'flatpickr/dist/themes/light.css';
 
+
 const createTaskEditTemplate = (task, options) => {
   const {description, color, tags, dueDate, repeatingsDays} = task;
   const {isDateShowing, isRepeatingTask, activeRepeatingDays} = options;
 
-  const isExpired = dueDate < new Date(Date.now());
+  const isExpired = dueDate && dueDate < new Date(Date.now());
 
   // const isRepeatingTask = Object.keys(repeatingsDays).some((day) => repeatingsDays[day]);
 
@@ -62,7 +63,7 @@ const createTaskEditTemplate = (task, options) => {
                 ${isRepeatingTask ?
                     `<fieldset class="card__repeat-days">
                     <div class="card__repeat-days-inner">
-                    ${(Object.keys(repeatingsDays).map((day) => (
+                    ${(Object.keys(activeRepeatingDays).map((day) => (
                       `<input
                           class="visually-hidden card__repeat-day-input"
                           type="checkbox"
@@ -164,6 +165,7 @@ export default class TaskEditComponent extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
+    this.setSubmitHandler(this._submitHandler);
     this._subscribeOnEvents();
   }
 

@@ -4,6 +4,7 @@ import BoardComponent from "./components/board";
 import FilterComponent from "./components/filter";
 import {render, RenderPosition} from "./utils";
 import {tasksAll, filters} from "./data/data";
+import TasksModel from "./models/tasks";
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
@@ -15,4 +16,7 @@ render(siteMainElement, new FilterComponent(filters).getElement(), RenderPositio
 render(siteMainElement, new BoardComponent().getElement(), RenderPosition.BEFOREEND);
 const board = document.querySelector(`.board.container`);
 
-new BoardController(board).render(tasksAll);
+const tasksModel = new TasksModel();
+tasksModel.setTasks(tasksAll);
+
+new BoardController(board, tasksModel).render();

@@ -56,6 +56,7 @@ const noRepetingsDays = {
 };
 
 const getTask = () => ({
+  id: String(Math.round(Date.now() * Math.random())),
   description: getRandomItem(DESCRIPTIONS),
   dueDate: getRandomBoolean() ? getRandomDate() : null,
   repeatingsDays: getRandomBoolean() ? getRepeatingDays() : noRepetingsDays,
