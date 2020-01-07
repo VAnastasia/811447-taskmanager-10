@@ -2,9 +2,28 @@ import TaskComponent from "../components/task";
 import TaskEditComponent from "../components/task-edit";
 import {render, replace, remove, RenderPosition} from "../utils";
 
-const Mode = {
+export const Mode = {
+  ADDING: `adding`,
   DEFAULT: `default`,
   EDIT: `edit`
+};
+
+export const EmptyTask = {
+  description: ``,
+  dueDate: null,
+  repeatingsDays: {
+    mo: false,
+    tu: false,
+    we: false,
+    th: false,
+    fr: false,
+    sa: false,
+    su: false,
+  },
+  tags: [],
+  color: `black`,
+  isFavorite: false,
+  isArchive: false
 };
 
 export default class TaskController {
@@ -23,6 +42,10 @@ export default class TaskController {
     const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
 
     if (isEscKey) {
+      if (this._mode === Mode.ADDING) {
+        this._onDataChange(this, EmptyTask, null);
+      }
+
       this._replaceEditToTask();
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
@@ -49,6 +72,12 @@ export default class TaskController {
     if (this._mode !== Mode.DEFAULT) {
       this._replaceEditToTask();
     }
+  }
+
+  destroy() {
+    remove(this._taskEditComponent);
+    remove(this._taskComponent);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
   render(task, mode = Mode.DEFAULT) {
@@ -78,8 +107,12 @@ export default class TaskController {
 
     this._taskEditComponent.setSubmitHandler((evt) => {
       evt.preventDefault();
+      const data = this._taskEditComponent.getData();
+      this._onDataChange(this, task, data);
       this._replaceEditToTask();
     });
+
+    // this._taskEditComponent.setDeleteButtonClickHandler(() => this._onDataChange(this, task, null));
 
     // if (oldTaskComponent) {
     //   this._container.replaceChild(this._taskComponent.getElement(), oldTaskComponent.getElement());
@@ -95,12 +128,12 @@ export default class TaskController {
         if (oldTaskEditComponent && oldTaskComponent) {
           replace(this._taskComponent, oldTaskComponent);
           replace(this._taskEditComponent, oldTaskEditComponent);
-          // this._replaceEditToTask();
+          this._replaceEditToTask();
         } else {
           render(this._container, this._taskComponent.getElement(), RenderPosition.BEFOREEND);
         }
         break;
-      case Mode.EDIT:
+      case Mode.ADDING:
         if (oldTaskEditComponent && oldTaskComponent) {
           remove(oldTaskComponent);
           remove(oldTaskEditComponent);

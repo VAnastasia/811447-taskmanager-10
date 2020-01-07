@@ -11,14 +11,21 @@ tasksModel.setTasks(tasksAll);
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
+const siteMenuComponent = new SiteMenuComponent();
 
-render(siteHeaderElement, new SiteMenuComponent().getElement(), RenderPosition.BEFOREEND);
-// render(siteMainElement, new FilterComponent(filters).getElement(), RenderPosition.BEFOREEND);
 const filterController = new FilterController(siteMainElement, tasksModel);
 filterController.render();
 
 render(siteMainElement, new BoardComponent().getElement(), RenderPosition.BEFOREEND);
 
 const board = document.querySelector(`.board.container`);
+const boardController = new BoardController(board, tasksModel);
 
-new BoardController(board, tasksModel).render();
+render(siteHeaderElement, siteMenuComponent.getElement(), RenderPosition.BEFOREEND);
+
+siteMenuComponent.getElement().querySelector(`.control__label--new-task`)
+  .addEventListener(`click`, () => {
+    boardController.createTask();
+  });
+
+boardController.render();
