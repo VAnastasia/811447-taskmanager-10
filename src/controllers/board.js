@@ -7,7 +7,6 @@ import TasksComponent from "../components/tasks";
 import LoadMoreComponent from "../components/load-more";
 import {render, RenderPosition} from "../utils";
 import TaskController from "./task";
-import TasksModel from "../models/tasks";
 
 const renderTasks = (taskListElement, tasks, onDataChange, onViewChange) => {
   return tasks.map((task) => {
@@ -36,6 +35,8 @@ export default class BoardController {
     this._onViewChange = this._onViewChange.bind(this);
 
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
+    this._onFilterChange = this._onFilterChange.bind(this);
+    this._tasksModel.setFilterChangeHandler(this._onFilterChange);
   }
 
   _onDataChange(taskController, oldData, newData) {
@@ -77,45 +78,67 @@ export default class BoardController {
     this._showedTaskControllers = newTasks;
   }
 
+  _onFilterChange() {
+    this._removeTasks();
+    this._renderTasks(this._tasksModel.getTasks());
+    this._renderLoadMoreButton();
+  }
+
+  _renderTasks(tasks) {
+    const taskListElement = this._tasksComponent.getElement();
+
+    const newTasks = renderTasks(taskListElement, tasks.slice(0, this._showingTasksCount), this._onDataChange, this._onViewChange);
+    this._showedTaskControllers = this._showedTaskControllers.concat(newTasks);
+  }
+
+  _removeTasks() {
+    const taskListElement = this._tasksComponent.getElement();
+    taskListElement.innerHTML = ``;
+    this._showedTaskControllers = [];
+  }
+
+  _renderLoadMoreButton() {
+    this._loadMoreComponent.getElement().remove();
+    this._loadMoreComponent.removeElement();
+
+    const tasks = this._tasksModel.getTasks();
+
+    if (this._showingTasksCount >= tasks.length) {
+      return;
+    }
+
+    render(this._container, this._loadMoreComponent.getElement(), RenderPosition.BEFOREEND);
+    this._loadMoreComponent.setClickHandler(() => this._onLoadMoreClick(tasks));
+  }
+
+  _onLoadMoreClick(tasks) {
+    const prevTasksCount = this._showingTasksCount;
+
+    this._showingTasksCount = this._showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
+
+    this._renderTasks(tasks.slice(prevTasksCount, this._showingTasksCount));
+
+    if (this._showingTasksCount >= tasks.length) {
+      this._loadMoreComponent.getElement().remove();
+      this._loadMoreComponent.removeElement();
+    }
+  }
 
   render() {
     const container = this._container;
     const tasks = this._tasksModel.getTasks();
-    // let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
-
-    // const isAllTasksArchived = this._tasks.every((task) => task.isArchive);
 
     if (tasks.length > 0) {
       render(container, this._sortComponent.getElement(), RenderPosition.BEFOREEND);
       render(container, this._tasksComponent.getElement(), RenderPosition.BEFOREEND);
-      const taskListElement = this._tasksComponent.getElement();
 
-      const newTasks = renderTasks(taskListElement, tasks.slice(0, this._showingTasksCount), this._onDataChange, this._onViewChange);
-      this._showedTaskControllers = this._showedTaskControllers.concat(newTasks);
+      this._renderTasks(tasks);
 
       this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     } else {
       render(container, this._noTasksComponent.getElement(), RenderPosition.BEFOREEND);
     }
 
-    const boardElement = document.querySelector(`.board`);
-
-    if (tasks.length > SHOWING_TASKS_COUNT_ON_START) {
-      render(boardElement, this._loadMoreComponent.getElement(), RenderPosition.BEFOREEND);
-    }
-
-    this._loadMoreComponent.setClickHandler(() => {
-      const prevTasksCount = this._showingTasksCount;
-      this._showingTasksCount = this._showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
-      const taskListElement = this._tasksComponent.getElement();
-
-      const newTasks = renderTasks(taskListElement, tasks.slice(prevTasksCount, this._showingTasksCount), this._onDataChange, this._onViewChange);
-      this._showedTaskControllers = this._showedTaskControllers.concat(newTasks);
-
-      if (this._showingTasksCount >= tasks.length) {
-        this._loadMoreComponent.getElement().remove();
-        this._loadMoreComponent.removeElement();
-      }
-    });
+    this._renderLoadMoreButton();
   }
 }

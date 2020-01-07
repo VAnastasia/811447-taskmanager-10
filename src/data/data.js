@@ -89,31 +89,38 @@ export const tasksAll = tasks.slice();
 const filters = [
   {
     name: `all`,
-    count: tasks.length
+    count: tasks.length,
+    isChecked: true
   },
   {
     name: `overdue`,
-    count: tasks.filter((task) => task.dueDate && task.dueDate < new Date(Date.now())).length
+    count: tasks.filter((task) => task.dueDate && task.dueDate < new Date(Date.now())).length,
+    isChecked: false
   },
   {
     name: `today`,
-    count: tasks.filter((task) => (new Date(task.dueDate)).getDate() === (new Date(Date.now())).getDate()).length
+    count: tasks.filter((task) => (new Date(task.dueDate)).getDate() === (new Date(Date.now())).getDate()).length,
+    isChecked: false
   },
   {
     name: `favorites`,
-    count: tasks.filter((task) => task.isFavorite).length
+    count: tasks.filter((task) => task.isFavorite).length,
+    isChecked: false
   },
   {
     name: `repeatings`,
-    count: tasks.filter((task) => Object.values(task.repeatingsDays).some((it) => !!it)).length
+    count: tasks.filter((task) => Object.values(task.repeatingsDays).some((it) => !!it)).length,
+    isChecked: false
   },
   {
     name: `tags`,
-    count: tasks.filter((task) => task.tags.length > 0).length
+    count: tasks.filter((task) => task.tags.length > 0).length,
+    isChecked: false
   },
   {
     name: `archive`,
-    count: tasks.filter((task) => task.isArchive).length
+    count: tasks.filter((task) => task.isArchive).length,
+    isChecked: false
   },
 ];
 
