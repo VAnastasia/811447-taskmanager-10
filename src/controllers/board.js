@@ -133,7 +133,7 @@ export default class BoardController {
       return;
     }
 
-    render(this._container, this._loadMoreComponent.getElement(), RenderPosition.BEFOREEND);
+    render(this._container.getElement(), this._loadMoreComponent.getElement(), RenderPosition.BEFOREEND);
     this._loadMoreComponent.setClickHandler(() => this._onLoadMoreClick(tasks));
   }
 
@@ -158,7 +158,14 @@ export default class BoardController {
     const taskListElement = this._tasksComponent.getElement();
     this._creatingTask = new TaskController(taskListElement, this._onDataChange, this._onViewChange);
     this._creatingTask.render(EmptyTask, TaskControllerMode.ADDING);
-    console.log(this._tasksModel.getTasks());
+  }
+
+  hide() {
+    this._container.hide();
+  }
+
+  show() {
+    this._container.show();
   }
 
   render() {
@@ -166,14 +173,14 @@ export default class BoardController {
     const tasks = this._tasksModel.getTasks();
 
     if (tasks.length > 0) {
-      render(container, this._sortComponent.getElement(), RenderPosition.BEFOREEND);
-      render(container, this._tasksComponent.getElement(), RenderPosition.BEFOREEND);
+      render(container.getElement(), this._sortComponent.getElement(), RenderPosition.BEFOREEND);
+      render(container.getElement(), this._tasksComponent.getElement(), RenderPosition.BEFOREEND);
 
       this._renderTasks(tasks);
 
       this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     } else {
-      render(container, this._noTasksComponent.getElement(), RenderPosition.BEFOREEND);
+      render(container.getElement(), this._noTasksComponent.getElement(), RenderPosition.BEFOREEND);
     }
 
     this._renderLoadMoreButton();
