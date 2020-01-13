@@ -10,13 +10,11 @@ const MAX_DESCRIPTION_LENGTH = 140;
 
 const isAllowableDescriptionLength = (description) => {
   const length = description.length;
-
-  return length >= MIN_DESCRIPTION_LENGTH &&
-    length <= MAX_DESCRIPTION_LENGTH;
+  return length >= MIN_DESCRIPTION_LENGTH && length <= MAX_DESCRIPTION_LENGTH;
 };
 
 const createTaskEditTemplate = (task, options) => {
-  const {description, color, tags, dueDate, repeatingsDays} = task;
+  const {id, description, color, tags, dueDate, repeatingsDays} = task;
   const {isDateShowing, isRepeatingTask, activeRepeatingDays, currentDescription} = options;
 
   const isExpired = dueDate && dueDate < new Date(Date.now());
@@ -41,6 +39,7 @@ const createTaskEditTemplate = (task, options) => {
               <use xlink:href="#wave"></use>
             </svg>
           </div>
+          <input name="id" type="hidden" value="${id}">
           <div class="card__textarea-wrap">
             <label>
               <textarea
@@ -155,26 +154,7 @@ const createTaskEditTemplate = (task, options) => {
     </article>`;
 };
 
-const DAYS = [`mo`, `tu`, `we`, `th`, `fr`, `sa`, `su`];
 
-const parseFormData = (formData) => {
-  const repeatingDays = DAYS.reduce((acc, day) => {
-    acc[day] = false;
-    return acc;
-  }, {});
-  const date = formData.get(`date`);
-
-  return {
-    description: formData.get(`text`),
-    color: formData.get(`color`),
-    tags: formData.getAll(`hashtag`),
-    dueDate: date ? new Date(date) : null,
-    repeatingDays: formData.getAll(`repeat`).reduce((acc, it) => {
-      acc[it] = true;
-      return acc;
-    }, repeatingDays),
-  };
-};
 
 export default class TaskEditComponent extends AbstractSmartComponent {
   constructor(task) {
@@ -234,9 +214,7 @@ export default class TaskEditComponent extends AbstractSmartComponent {
 
   getData() {
     const form = this.getElement().querySelector(`.card__form`);
-    const formData = new FormData(form);
-
-    return parseFormData(formData);
+    return new FormData(form);
   }
 
   setSubmitHandler(handler) {
