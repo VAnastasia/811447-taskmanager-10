@@ -14,7 +14,7 @@ const isAllowableDescriptionLength = (description) => {
 };
 
 const createTaskEditTemplate = (task, options) => {
-  const {id, description, color, tags, dueDate, repeatingsDays} = task;
+  const {id, color, tags, dueDate, repeatingsDays} = task;
   const {isDateShowing, isRepeatingTask, activeRepeatingDays, currentDescription} = options;
 
   const isExpired = dueDate && dueDate < new Date(Date.now());
@@ -23,9 +23,9 @@ const createTaskEditTemplate = (task, options) => {
     return Object.keys(days).some((day) => days[day]);
   };
 
-  const isBlockSaveButton = (isDateShowing && isRepeatingTask) ||
-    (isRepeatingTask && !isRepeating(activeRepeatingDays)) ||
-    !isAllowableDescriptionLength(description);
+  // const isBlockSaveButton = (isDateShowing && isRepeatingTask) ||
+  //   (isRepeatingTask && !isRepeating(activeRepeatingDays)) ||
+  //   !isAllowableDescriptionLength(description);
   // const isRepeatingTask = Object.keys(repeatingsDays).some((day) => repeatingsDays[day]);
 
   const repeatClass = isRepeating(repeatingsDays) ? `card--repeat` : ``;
@@ -56,37 +56,37 @@ const createTaskEditTemplate = (task, options) => {
                   date: <span class="card__date-status">${isDateShowing ? `yes` : `no`}</span>
                 </button>
                 ${isDateShowing ?
-                  `<fieldset class="card__date-deadline">
-                    <label class="card__input-deadline-wrap">
-                      <input
-                        class="card__date"
-                        type="text"
-                        placeholder=""
-                        name="date"
-                        value="${formatDate(dueDate)} ${formatTime(dueDate)}"
-                      />
-                    </label>
-                  </fieldset/>` : ``}
+    `<fieldset class="card__date-deadline">
+        <label class="card__input-deadline-wrap">
+          <input
+            class="card__date"
+            type="text"
+            placeholder=""
+            name="date"
+            value="${formatDate(dueDate)} ${formatTime(dueDate)}"
+          />
+        </label>
+      </fieldset/>` : ``}
 
-                <button class="card__repeat-toggle" type="button">
-                  repeat:<span class="card__repeat-status">${isRepeatingTask ? `yes` : `no`}</span>
-                </button>
-                ${isRepeatingTask ?
-                    `<fieldset class="card__repeat-days">
-                    <div class="card__repeat-days-inner">
-                    ${(Object.keys(activeRepeatingDays).map((day) => (
-                      `<input
-                          class="visually-hidden card__repeat-day-input"
-                          type="checkbox"
-                          id="repeat-${day}-4"
-                          name="repeat"
-                          value="${day}"
-                          ${repeatingsDays[day] ? `checked` : ``}
-                        />
-                        <label class="card__repeat-day" for="repeat-${day}-4"
-                          >${day}</label
-                        >`.trim()
-                    ))).join(``)}
+    <button class="card__repeat-toggle" type="button">
+      repeat:<span class="card__repeat-status">${isRepeatingTask ? `yes` : `no`}</span>
+    </button>
+     ${isRepeatingTask ?
+    `<fieldset class="card__repeat-days">
+      <div class="card__repeat-days-inner">
+      ${(Object.keys(activeRepeatingDays).map((day) => (
+    `<input
+      class="visually-hidden card__repeat-day-input"
+      type="checkbox"
+      id="repeat-${day}-${id}"
+      name="repeat"
+      value="${day}"
+      ${repeatingsDays[day] ? `checked` : ``}
+      />
+      <label class="card__repeat-day" for="repeat-${day}-${id}"
+      >${day}</label
+      >`.trim()
+  ))).join(``)}
 
                     </div>
                   </fieldset>` : ``}
@@ -153,7 +153,6 @@ const createTaskEditTemplate = (task, options) => {
       </form>
     </article>`;
 };
-
 
 
 export default class TaskEditComponent extends AbstractSmartComponent {

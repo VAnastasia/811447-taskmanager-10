@@ -1,15 +1,15 @@
 import moment from "moment";
 
-const dateFormat = new Intl.DateTimeFormat(`en-GB`, {
-  month: `long`,
-  day: `numeric`
-});
-
-const timeFormat = new Intl.DateTimeFormat(`en-GB`, {
-  hour12: true,
-  hour: `numeric`,
-  minute: `numeric`
-});
+// const dateFormat = new Intl.DateTimeFormat(`en-GB`, {
+//   month: `long`,
+//   day: `numeric`
+// });
+//
+// const timeFormat = new Intl.DateTimeFormat(`en-GB`, {
+//   hour12: true,
+//   hour: `numeric`,
+//   minute: `numeric`
+// });
 
 export const formatTime = (date) => {
   return moment(date).format(`hh:mm A`);

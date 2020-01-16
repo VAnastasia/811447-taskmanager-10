@@ -34,6 +34,7 @@ const parseFormData = (formData) => {
     acc[day] = false;
     return acc;
   }, {});
+
   const date = formData.get(`date`);
 
   return new TaskModel({
@@ -41,8 +42,8 @@ const parseFormData = (formData) => {
     'description': formData.get(`text`),
     'color': formData.get(`color`),
     'tags': formData.getAll(`hashtag`),
-    'dueDate': date ? new Date(date) : null,
-    'repeatingsDays': formData.getAll(`repeat`).reduce((acc, it) => {
+    'due_date': date ? new Date(date) : null,
+    'repeating_days': formData.getAll(`repeat`).reduce((acc, it) => {
       acc[it] = true;
       return acc;
     }, repeatingsDays),
@@ -121,9 +122,6 @@ export default class TaskController {
     });
 
     this._taskComponent.setArchiveButtonClickHandler(() => {
-      // this._onDataChange(this, task, Object.assign({}, task, {
-      //   isArchive: !task.isArchive
-      // }));
       const newTask = TaskModel.clone(task);
       newTask.isArchive = !newTask.isArchive;
 
@@ -131,10 +129,6 @@ export default class TaskController {
     });
 
     this._taskComponent.setFavoritesButtonClickHandler(() => {
-      // this._onDataChange(this, task, Object.assign({}, task, {
-      //   isFavorite: !task.isFavorite,
-      // }));
-
       const newTask = TaskModel.clone(task);
       newTask.isFavorite = !newTask.isFavorite;
 
@@ -143,25 +137,12 @@ export default class TaskController {
 
     this._taskEditComponent.setSubmitHandler((evt) => {
       evt.preventDefault();
-      // const data = this._taskEditComponent.getData();
       const formData = this._taskEditComponent.getData();
       const data = parseFormData(formData);
-      console.log(task, data);
 
       this._onDataChange(this, task, data);
       this._replaceEditToTask();
     });
-
-    // this._taskEditComponent.setDeleteButtonClickHandler(() => this._onDataChange(this, task, null));
-
-    // if (oldTaskComponent) {
-    //   this._container.replaceChild(this._taskComponent.getElement(), oldTaskComponent.getElement());
-    //   this._container.replaceChild(this._taskEditComponent.getElement(), oldTaskEditComponent.getElement());
-    // } else if (oldTaskEditComponent) {
-    //   this._container.replaceChild(this._taskEditComponent.getElement(), oldTaskEditComponent.getElement());
-    // } else {
-    //   render(this._container, this._taskComponent.getElement(), RenderPosition.BEFOREEND);
-    // }
 
     switch (mode) {
       case Mode.DEFAULT:
